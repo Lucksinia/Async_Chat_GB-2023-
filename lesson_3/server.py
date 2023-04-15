@@ -27,7 +27,7 @@ def get_params():
 
 def run():
     """server starting and parsing logic in a mainloop"""
-    print("server.py start...")
+    print("server start...")
     args = get_params()
     addr = args.addr
     port = args.port
