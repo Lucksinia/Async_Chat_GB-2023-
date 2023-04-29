@@ -1,8 +1,8 @@
 # Asyncronous Chat Course from GeekBrains #
 
-- Lesson_1 [x] Концепции хранения информации
-- Lesson_2 [x] Файловые хранение данных
-- Lesson_3 [x] Основы
+- Lesson_1 [x] - Концепции хранения информации
+- Lesson_2 [x] - Файловые хранение данных
+- Lesson_3 [x] - Основы сетевого программирования
 - lesson_4 [ ]
 - lesson_5 [ ]
 - lesson_6 [ ]
