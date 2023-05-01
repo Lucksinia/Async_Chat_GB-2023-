@@ -3,7 +3,6 @@ from unittest import TestCase, main
 from lesson_3.client import presence, get_addr_port, read_answer
 
 
-# тестовые данные
 test_data = {
     "action": "presence",
     "time": 1.123,
@@ -22,7 +21,7 @@ def for_test_msg_to_client(d):
 class TestClient(TestCase):
     def test_presence(self):
         test_result = presence(account_name="account_name", status="status")
-        test_result["time"] = 1.123  # принудительно time = 1.123
+        test_result["time"] = 1.123  # time = 1.123
         self.assertEqual(test_result, test_data)
 
     def test_get_addr_port(self):
@@ -33,10 +32,10 @@ class TestClient(TestCase):
         )
 
     def test_read_answer(self):
-        # имитируем отправку ответа сервера
+        # server imitation
         test_result = json.loads(for_test_msg_to_client(test_data))
         expected_output = read_answer(test_result)
-        actual_result = (200, "All clear")  # ожидаемый результат
+        actual_result = (200, "All clear")  # tougt out result
         self.assertEqual(expected_output, actual_result)
 
 
