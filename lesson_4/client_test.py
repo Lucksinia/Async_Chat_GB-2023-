@@ -27,8 +27,7 @@ class TestClient(TestCase):
     def test_get_addr_port(self):
         self.assertEqual(
             str(get_addr_port()),
-            "Namespace(addr='localhost', port=7777, user='Varvara', status='2 "
-            "years')",
+            "Namespace(addr='localhost', port=7777, user='Daniil', status='Constantly Ill')",
         )
 
     def test_read_answer(self):
