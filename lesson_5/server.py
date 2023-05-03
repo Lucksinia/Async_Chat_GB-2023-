@@ -4,11 +4,13 @@ import logging
 from socket import socket, AF_INET, SOCK_STREAM
 from datetime import datetime
 from log import server_log_config
+from log.logging_decorator import log
 
 server_log = logging.getLogger("server")
 print(server_log)
 
 
+@log
 def get_params():
     """get parameters of port and IP-adress
 
@@ -20,6 +22,7 @@ def get_params():
     return parser.parse_args()
 
 
+@log
 def create_socket_server(addr, port):
     print(f"server params = addr: {addr}, port: {port}")
     server_log.info(f"Create socket server. Server params -- addr: {addr}, port {port}")
@@ -29,6 +32,7 @@ def create_socket_server(addr, port):
     return s
 
 
+@log
 def msg_to_client(d, client):
     if d["action"] == "presence":
         msg = {

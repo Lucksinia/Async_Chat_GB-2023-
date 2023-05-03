@@ -3,12 +3,14 @@ from socket import *
 from datetime import datetime
 import json
 import logging
-from log import client_log_config
+import log.client_log_config
+from log.logging_decorator import log
 
 client_log = logging.getLogger("client")
 print(client_log)
 
 
+@log
 def presence(account_name, status):
     data = {
         "action": "presence",
@@ -19,6 +21,7 @@ def presence(account_name, status):
     return data
 
 
+@log
 def get_addr_port():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -35,6 +38,7 @@ def get_addr_port():
     return parser.parse_args()
 
 
+@log
 def create_socket_client(addr, port):
     # Connection rewritten as try\exept statment
     s = socket(AF_INET, SOCK_STREAM)
@@ -47,6 +51,7 @@ def create_socket_client(addr, port):
         exit(1)
 
 
+@log
 def read_answer(dict_from_server):
     # Reading msg from server with logging
     client_log.info("Reading answer from server(func read_answer)")

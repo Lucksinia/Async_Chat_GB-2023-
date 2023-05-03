@@ -1,6 +1,4 @@
-2023-05-02 15:37:50,069 INFO server.py  server.py start...
-2023-05-02 15:37:50,074 INFO server.py  Create socket server. Server params -- addr: , port 7777
-2023-05-02 15:39:13,761 INFO server.py  server.py start...
-2023-05-02 15:39:13,766 INFO server.py  Create socket server. Server params -- addr: , port 7777
-2023-05-02 15:40:19,955 INFO server.py  Resived presence-msg from client
-2023-05-02 15:40:19,955 INFO server.py  Сообщение было отправлено клиенту. "response": 200
+2023-05-03 11:57:20,386 INFO server.py  server.py start...
+2023-05-03 11:57:20,394 DEBUG logging_decorator.py Function __main__.get_params was called from run
+2023-05-03 11:57:20,399 DEBUG logging_decorator.py Function __main__.create_socket_server was called from run
+2023-05-03 11:57:20,399 INFO server.py  Create socket server. Server params -- addr: , port 7777
