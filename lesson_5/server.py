@@ -1,13 +1,12 @@
 import argparse
 import json
 import logging
+import select
 from socket import socket, AF_INET, SOCK_STREAM
 from datetime import datetime
-from log import server_log_config
 from log.logging_decorator import log
 
 server_log = logging.getLogger("server")
-print(server_log)
 
 
 @log
@@ -29,20 +28,74 @@ def create_socket_server(addr, port):
     s = socket(AF_INET, SOCK_STREAM)
     s.bind((addr, port))
     s.listen(5)
+    s.settimeout(1)
     return s
 
 
 @log
+def read_requests(r_clients, all_clients):
+    responses = {}  # dict{socket:query}
+    for sock in r_clients:
+        try:
+            data = sock.recv(1024).decode('utf-8')
+            responses[sock] = data
+        except:
+            server_log.info(f'Client {sock.fileno()} {sock.getpeername()} disconnected')
+            all_clients.remove(sock)
+    return responses
+
+
+@log
 def msg_to_client(d, client):
-    if d["action"] == "presence":
-        msg = {
-            "response": 200,
-            "time": datetime.timestamp(datetime.now()),
-            "alert": "200 OK",
-        }
-        msg = json.dumps(msg, indent=4).encode("utf-8")
-        client.send(msg)
-        server_log.info('Msg send to client. "response": 200')
+    def msg_to_client(d):
+        if d['action'] == 'presence':
+            msg = {
+                "response": 200,
+                "time": datetime.timestamp(datetime.now()),
+                "alert": "OK"
+            }
+            msg = json.dumps(msg, indent=4).encode('utf-8')
+            return msg
+        else:
+            print(f"message: {d['text']} from {d['user']['account_name']}")
+            data = {
+                "response": 200,
+                "action": "message",
+                "time": datetime.timestamp(datetime.now()),
+                "text": d['text'],
+                "user": {
+                    "account_name": d['user']['account_name'],
+                }
+            }
+            msg = json.dumps(data, indent=4).encode('utf-8')
+            return msg
+        
+
+@log
+def write_responses(requests, w_clients, all_clients, chat):
+    for client in w_clients:
+        if client in requests:
+            resp = requests[client].encode('utf-8')
+            if resp != b'':
+                d = json.loads(resp.decode('utf-8'))
+                try:
+                    if d['text']:
+                        chat.append([d['text'], d['user']['account_name']])
+                except:
+                    pass
+                try:
+                    client.send(msg_to_client(d))
+                    print('sending...')
+                except:
+                    server_log.info(f'Client {client.fileno()} {client.getpeername()} disconnected')
+                    client.close()
+                    all_clients.remove(client)
+
+
+@log
+def send_data(data, sock):
+    result_data = json.dumps(data).encode('utf-8')
+    sock.send(result_data)
 
 
 def run():
@@ -51,21 +104,40 @@ def run():
     args = get_params()
     addr = args.addr
     port = args.port
+    chat = []
+    clients = []
     s = create_socket_server(addr, port)
 
     while True:
-        client, addr = s.accept()
         try:
-            data = client.recv(1000000)
-            d = json.loads(data.decode("utf-8"))
-            server_log.info("Resived presence-msg from client")
-            msg_to_client(d, client)
-            client.close()
-        except Exception as err:
-            server_log.error("Error:", err)
-            server_log.error("Wrong data from client")
-            client.close()
-        client.close()
+            conn, addr = s.accept()  # Check timeout
+        except OSError as e:
+            pass  # timeout
+        else:
+            print("Connection from %s" % str(addr))
+            clients.append(conn)
+        finally:
+            # test for events
+            wait = 0
+            r = []
+            w = []
+            try:
+                r, w, e = select.select(clients, clients, [], wait)
+            except:
+                pass  # client disconnected
+            requests = read_requests(r, clients)
+            if requests:
+                write_responses(requests, w, clients, chat)
+            if chat:
+                for client in clients:
+                    data = {
+                        "response": 200,
+                        "action": "message",
+                        "time": datetime.timestamp(datetime.now()),
+                        "text": chat[0],
+                    }
+                    send_data(data, client)
+                del chat[0]
 
 
 if __name__ == "__main__":
