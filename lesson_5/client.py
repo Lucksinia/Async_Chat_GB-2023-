@@ -1,9 +1,11 @@
 import argparse
-from socket import *
-from datetime import datetime
+import time
 import json
 import logging
+from socket import *
+from datetime import datetime
 from log.logging_decorator import log
+from threading import Thread
 
 client_log = logging.getLogger("client")
 
@@ -60,7 +62,7 @@ def get_addr_port():
         "--status", action="store", dest="status", type=str, default="Constantly Ill"
     )
     # is a flag factually
-    parser.add_argument("--send", action="store", dest="send", type=int, default=0)
+    # parser.add_argument("--send", action="store", dest="send", type=int, default=0)
     client_log.debug("Function get_addr_port starting...")
     return parser.parse_args()
 
@@ -103,64 +105,58 @@ def read_answer(dict_from_server):
         client_log.error(f'Data : {dict_from_server}')
     return ''
 
+def chat_read(sock):
+    while True:
+        try:
+            data = data_from_server(sock)
+            answer = read_answer(data)
+            print(answer)
+            client_log.info(f'Message received: {answer} ')
+        except Exception as err:
+            client_log.error(f'Some errors: {err}')
+            exit(1)
 
+
+def chat_write(user, s):
+    while True:
+        message = input(f'>>>{user}\n')
+        try:
+            send_data(message_to_server(message, user), s)
+        except Exception as err:
+            client_log.error(f'Some errors: {err}')
 
 def run():
     client_log.info("client.py start...")
     args = get_addr_port()
-    addr, port, user, status, send_true = args.addr, args.port, args.user, args.status, args.send
-    client_log.info(f"parameters = {addr}, {port}, {user}, {status}, {send_true}")
+    addr, port, user, status = args.addr, args.port, args.user, args.status
+    client_log.info(f"parameters = {addr}, {port}, {user}, {status}")
     s = create_socket_client(addr, port)
     presence_msg = presence(user, status)
     client_log.info("Presence message sending start...")
     s.send(json.dumps(presence_msg, indent=4).encode("utf-8"))
     client_log.info("Presence message sending...DONE")
-    # Hot mess of a msg parser
+    # Slightly less mess of a msg parser
     try:
         data = data_from_server(s)
         answer = read_answer(data)
-        client_log.info('Message(answer) from server received: ', answer)
-        print(f'Message(answer) from server received:{answer} ')
+        print(f'Message(answer) from server received: ', answer)
+
     except:
         client_log.error('No messages from server.')
-    if send_true:  # waiting client input
-        while True:
-            message = input('Write text to sending: ')
-            try:
-                send_data(message_to_server(message, user), s)
-            except Exception as err:
-                client_log.error(f'Some errors: {err}')
-    else:  # waiting any message
-        print('client send status 0, waiting messages...')
-        while True:
-            try:
-                print('waiting...')
-                data = data_from_server(s)
-                print(f'data from server : {data}')
-                answer = read_answer(data)
-                client_log.info(f'{user} - Message(answer) from server received: ')
-                print(f'Message(answer) from server received: ', answer)
-            except Exception as err:
-                client_log.error(f'Some errors: {err}')
-            if send_true:  # if true,waiting for input
-                while True:
-                    message = input('Write text to sending: ')
-                    try:
-                        send_data(message_to_server(message, user), s)
-                    except Exception as err:
-                        client_log.error(f'Some errors: {err}')
-            else:  # waiting for msg
-                print('client send status 0, waiting messages...')
-                while True:
-                    try:
-                        print('waiting...')
-                        data = data_from_server(s)
-                        print(f'data from server : {data}')
-                        answer = read_answer(data)
-                        client_log.info(f'{user} - Message(answer) from server received: ')
-                        print(f'Message(answer) from server received: ', answer)
-                    except Exception as err:
-                        client_log.error(f'Some errors: {err}')
+        exit(1)
+
+    w = Thread(target=chat_write, args=(user, s))
+    w.daemon = True
+    w.start()
+
+    r = Thread(target=chat_read, args=(s,))
+    r.daemon = True
+    r.start()
+
+    while True:
+        time.sleep(1)
+        if not w.is_alive() or not r.is_alive():
+            break
 
 
 if __name__ == "__main__":

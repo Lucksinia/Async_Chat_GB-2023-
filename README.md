@@ -6,8 +6,8 @@
 - lesson_4 [x] - Основы тестирования
 - lesson_5 [x] - Логирование
 - lesson_6 [x] - Декораторы и продолжение работы с сетью
-- lesson_7 [ ]
-- lesson_8 [ ]
+- lesson_7 [x] - Модуль select, слоты
+- lesson_8 [x] - Потоки ([result.txt](result.txt))
 - lesson_9 [ ]
 - lesson_10 [ ]
 - lesson_11 [ ]
