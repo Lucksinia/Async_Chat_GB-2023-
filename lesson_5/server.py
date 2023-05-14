@@ -46,29 +46,14 @@ def read_requests(r_clients, all_clients):
 
 
 @log
-def msg_to_client(d, client):
-    def msg_to_client(d):
-        if d['action'] == 'presence':
-            msg = {
-                "response": 200,
-                "time": datetime.timestamp(datetime.now()),
-                "alert": "OK"
-            }
-            msg = json.dumps(msg, indent=4).encode('utf-8')
-            return msg
-        else:
-            print(f"message: {d['text']} from {d['user']['account_name']}")
-            data = {
-                "response": 200,
-                "action": "message",
-                "time": datetime.timestamp(datetime.now()),
-                "text": d['text'],
-                "user": {
-                    "account_name": d['user']['account_name'],
-                }
-            }
-            msg = json.dumps(data, indent=4).encode('utf-8')
-            return msg
+def presence_reaction(d):
+    msg = {
+        "response": 200,
+        "time": datetime.timestamp(datetime.now()),
+        "alert": "OK"
+    }
+    msg = json.dumps(msg, indent=4).encode('utf-8')
+    return msg
         
 
 @log
@@ -76,20 +61,31 @@ def write_responses(requests, w_clients, all_clients, chat):
     for client in w_clients:
         if client in requests:
             resp = requests[client].encode('utf-8')
+            recipients = all_clients.copy()
+            recipients.remove(client)
             if resp != b'':
                 d = json.loads(resp.decode('utf-8'))
                 try:
+                    if d['action'] == 'presence':
+                        client.send(presence_reaction(d))
                     if d['text']:
                         chat.append([d['text'], d['user']['account_name']])
+                        for clnt in recipients:
+                            data = {
+                                "response": 200,
+                                "action": "message",
+                                "time": datetime.timestamp(datetime.now()),
+                                "text": chat[0],
+                            }
+                            try:
+                                send_data(data, clnt)
+
+                            except:
+                                print('Клиент {} {} отключился'.format(client.fileno(), client.getpeername()))
+                                client.close()
+                        del chat[0]
                 except:
                     pass
-                try:
-                    client.send(msg_to_client(d))
-                    print('sending...')
-                except:
-                    server_log.info(f'Client {client.fileno()} {client.getpeername()} disconnected')
-                    client.close()
-                    all_clients.remove(client)
 
 
 @log

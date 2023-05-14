@@ -1,6 +1,0 @@
-2023-05-02 15:37:50,069 INFO server.py  server.py start...
-2023-05-02 15:37:50,074 INFO server.py  Create socket server. Server params -- addr: , port 7777
-2023-05-02 15:39:13,761 INFO server.py  server.py start...
-2023-05-02 15:39:13,766 INFO server.py  Create socket server. Server params -- addr: , port 7777
-2023-05-02 15:40:19,955 INFO server.py  Resived presence-msg from client
-2023-05-02 15:40:19,955 INFO server.py  Сообщение было отправлено клиенту. "response": 200
