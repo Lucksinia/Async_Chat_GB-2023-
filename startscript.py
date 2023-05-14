@@ -8,10 +8,9 @@ while True:
     elif user == "s":
         client_list.append(
             Popen(
-                "python lesson_5\client.py --user NotMe --send 1", creationflags=CREATE_NEW_CONSOLE
+                "python lesson_5\client.py --user NotMe", creationflags=CREATE_NEW_CONSOLE
             )
         )
-        client_list.append(Popen("python lesson_5\client.py", creationflags=CREATE_NEW_CONSOLE))
         client_list.append(
             Popen("python lesson_5\client.py --user Daniil", creationflags=CREATE_NEW_CONSOLE)
         )

@@ -1,0 +1,15 @@
+Client 1:
+python lesson_5\client.py --user Daniil
+Message(answer) from server received:  200: 0
+>>>Daniil
+something
+>>>Daniil
+something by NotMe
+something
+
+Client 2:
+Message(answer) from server received:  200: 0
+>>>NotMe
+something
+>>>NotMe
+something by Daniil
