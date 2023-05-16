@@ -1,2 +1,6 @@
 /.venv/
 /__pycache__/
+/lesson_5/log/__pycache__/
+/lesson_5/log/client.log.*
+/lesson_5/log/server.log.*
+/lesson_9/__pycache__/
