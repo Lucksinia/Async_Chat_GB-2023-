@@ -8,7 +8,7 @@
 - lesson_6 [x] - Декораторы и продолжение работы с сетью
 - lesson_7 [x] - Модуль select, слоты
 - lesson_8 [x] - Потоки ([result.txt](result.txt))
-- lesson_9 [ ]
+- lesson_9 [x] - Полезные модули
 - lesson_10 [ ]
 - lesson_11 [ ]
 - lesson_12 [ ]
