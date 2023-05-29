@@ -11,13 +11,13 @@ while True:
         case "s":
             client_list.append(
                 Popen(
-                    "python lesson_5\client.py --user NotMe",
+                    "python lesson_10\client.py --user NotMe",
                     creationflags=CREATE_NEW_CONSOLE,
                 )
             )
             client_list.append(
                 Popen(
-                    "python lesson_5\client.py --user Daniil",
+                    "python lesson_10\client.py --user Daniil",
                     creationflags=CREATE_NEW_CONSOLE,
                 )
             )
@@ -29,7 +29,7 @@ while True:
                 for i in range(int(chaters_number)):
                     client_list.append(
                         Popen(
-                            f"python lesson_5\client.py --user Client{i + 1} --status {i+1}",
+                            f"python lesson_10\client.py --user Client{i + 1} --status {i+1}",
                             creationflags=CREATE_NEW_CONSOLE,
                         )
                     )
