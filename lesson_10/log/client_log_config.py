@@ -4,7 +4,7 @@ import logging
 import sys
 
 home_path = Path().cwd()
-log_path = home_path / "lesson_5" / "log" / "client.log"
+log_path = home_path / "lesson_10" / "log" / "client.log"
 
 hand = logging.StreamHandler(sys.stderr)
 hand.setLevel(logging.ERROR)

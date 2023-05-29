@@ -1,9 +1,0 @@
-2023-05-28 23:17:50,002 DEBUG logging_decorator.py Function __main__.get_addr_port was called from <module>
-2023-05-28 23:17:50,008 DEBUG client.py  Function get_addr_port starting...
-2023-05-28 23:17:50,008 DEBUG logging_decorator.py Function __main__.main was called from <module>
-2023-05-28 23:19:07,417 DEBUG logging_decorator.py Function __main__.get_addr_port was called from <module>
-2023-05-28 23:19:07,422 DEBUG client.py  Function get_addr_port starting...
-2023-05-28 23:19:07,422 DEBUG logging_decorator.py Function __main__.main was called from <module>
-2023-05-28 23:19:21,834 DEBUG logging_decorator.py Function __main__.get_addr_port was called from <module>
-2023-05-28 23:19:21,838 DEBUG client.py  Function get_addr_port starting...
-2023-05-28 23:19:21,850 DEBUG logging_decorator.py Function __main__.main was called from <module>

@@ -181,7 +181,7 @@ def get_addr_port():
     port = args.port
     user = args.user
     status = args.status
-    return args, addr, port, user, status
+    return addr, port, user, status
 
 
 @log
